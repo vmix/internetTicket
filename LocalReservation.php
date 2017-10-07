@@ -6,7 +6,7 @@ class LocalReservation
     public $ticketId;
     public $orderId;
     public $eventId;
-    protected $prefix = 'local';
+    protected $prefix;
     private $min = 99;
     private $max = 3000;
 
@@ -16,7 +16,14 @@ class LocalReservation
 
     public function reserveTickets($eventId)
     {
-        $this->ticketId = random_int($this->min, $this->max);
+        try {
+            $this->ticketId = random_int($this->min, $this->max); //учитываем ошибки random_int
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        } catch (Error $e) {
+            echo $e->getMessage();
+        }
+
         defineType($eventId) ? $this->prefix = 'local' : $this->prefix = 'partnerApi';
         echo "[$this->prefix] | Creating object for event #" . $eventId . '<br>';
         echo "[$this->prefix] | Reserving ticket #" . $this->ticketId . '<br>';
